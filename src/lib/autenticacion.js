@@ -32,7 +32,7 @@ export const crearCuentaEmailPass = (email, password, nombres) => {
     .then((user) => {
       setTimeout(() => {
         console.log(user.displayName);
-      }, 600);
+      }, 200);
     })
     .catch((error) => { // Para ver si devuelve un error
       console.log(error);

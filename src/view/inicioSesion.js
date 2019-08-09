@@ -6,7 +6,7 @@ export default () => {
     <input type="text" id="input-mail" class="login-input" placeholder="ejemplo@mail.com">
     <input type="password" id="input-password" class="login-input class-input" placeholder="Escribe tu contraseña" >
     <span id="icon-clave" class="icon-clave"></span>
-    <button class="btn login-btn" id="btn-iniciar-sesion" data-action ='login'>Iniciar Sesión</button>
+    <button class="btn login-btn" id="btn-iniciar-registrar" data-action ='login'>Iniciar Sesión</button>
     <div class="cont-btn-redes display-flex">
       <p>O bien ingresar con...</p>
         <button class="btn-circule btn-icon btn-google" id="login-google" style="background-image: url(img/icon-google.png)"></button>
