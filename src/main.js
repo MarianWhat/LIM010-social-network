@@ -5,7 +5,6 @@ const all = () => {
   const inputMail = document.getElementById('input-mail');
   const inputPassword = document.getElementById('input-password');
   const inputName = document.getElementById('input-name');
-  // const formLogin = document.getElementById('form-login');
   const loginGoogle = document.getElementById('login-google');
   const btnIniciarRegistrar = document.getElementById('btn-iniciar-registrar');
   const btnMostrarClave = document.getElementById('icon-clave');
@@ -27,17 +26,14 @@ const all = () => {
     authCuentaGoogle();
   });
   btnIniciarRegistrar.addEventListener('click', (e) => {
-    console.log('Hey');
     e.preventDefault();
     const email = inputMail.value;
     const password = inputPassword.value;
     const name = inputName.value;
     if (btnIniciarRegistrar.dataset.action === 'login') {
-      console.log('Hey');
       autEmailPass(email, password);
     }
     if (btnIniciarRegistrar.dataset.action === 'registrar') {
-      console.log('Hey');
       crearCuentaEmailPass(email, password, name);
     }
   });
