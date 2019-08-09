@@ -4,10 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link type="text/css" rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
   <title>Social Network</title>
 </head>
 <body>
-  
-  <script type="module" src="main.js"></script>
+  <main class="display-flex">
+    <section class="sec-autentificacion display-flex" id="container">
+      <img class="img-banner" src="img/img-banner.jpg">
+      
+      
+    </section>
+  </main>
+
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script> <!--Obligatorio -->
+ <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script> <!--Para usar Firestore-->
+<script type="module" src="main.js"></script>
+<script>
+const firebaseConfig = {  //varConfig
+  apiKey: 'AIzaSyCw3AYjSbsAeJ0dZsEAe_tocFzZk1rrr_o',
+  authDomain: 'prueba-51039.firebaseapp.com',
+  databaseURL: 'https://prueba-51039.firebaseio.com',
+  projectId: 'prueba-51039',
+  storageBucket: '',
+  messagingSenderId: '552919889245',
+  appId: '1:552919889245:web:df9179f3406b85ac'
+};
+firebase.initializeApp(firebaseConfig);
+
+</script>
+
 </body>
 </html>
