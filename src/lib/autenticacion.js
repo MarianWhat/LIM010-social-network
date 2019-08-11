@@ -27,12 +27,11 @@ export const crearCuentaEmailPass = (email, password, nombres) => {
     .then(() => {
       console.log('Registrada');
       return firebase.auth().currentUser;
-      // console.log(firebase.auth().currentUser);
     })
     .then((user) => {
       setTimeout(() => {
         console.log(user.displayName);
-      }, 200);
+      }, 400);
     })
     .catch((error) => { // Para ver si devuelve un error
       console.log(error);
@@ -53,4 +52,4 @@ export const authCuentaGoogle = () => {
     .catch((error) => { // Para ver si devuelve un error
       console.log(error);
     });
-}
+};

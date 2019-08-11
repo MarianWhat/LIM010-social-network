@@ -2,7 +2,7 @@ import { autEmailPass, crearCuentaEmailPass, authCuentaGoogle } from './lib/aute
 import { changeView } from './view-controler/index.js';
 
 const all = () => {
-  const inputMail = document.getElementById('input-mail');
+  const inputMail = document.getElementById('input-mail')
   const inputPassword = document.getElementById('input-password');
   const inputName = document.getElementById('input-name');
   const loginGoogle = document.getElementById('login-google');
@@ -50,4 +50,4 @@ window.addEventListener('load', init);
 
 setTimeout(() => {
   all();
-}, 900);
+}, 700);
