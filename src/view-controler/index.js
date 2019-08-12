@@ -2,7 +2,7 @@ import { components } from '../view/index.js';
 
 const changeView = (router) => {
   const container = document.getElementById('container');
-  container.innerHTML = '<img class="img-banner" src="img/img-banner.jpg">';
+  container.innerHTML = '<div class="banner display-flex"><h1>Codebook</h1><p class="text-login">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at ante leo. Sed venenatis, nisl non maximus consequat.</p></div> ';
   switch (router) {
     case '': {
       return container.appendChild(components.inicioSesion()); }
@@ -15,3 +15,5 @@ const changeView = (router) => {
   }
 };
 export { changeView };
+
+// <img class="img-logo" src="img/logo.png">

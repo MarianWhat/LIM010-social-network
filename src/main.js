@@ -1,6 +1,7 @@
 import { autEmailPass, crearCuentaEmailPass, authCuentaGoogle } from './lib/autenticacion.js';
 import { changeView } from './view-controler/index.js';
 
+// all, Contiene las varibles y eventos.
 const all = () => {
   const inputMail = document.getElementById('input-mail')
   const inputPassword = document.getElementById('input-password');
@@ -8,6 +9,11 @@ const all = () => {
   const loginGoogle = document.getElementById('login-google');
   const btnIniciarRegistrar = document.getElementById('btn-iniciar-registrar');
   const btnMostrarClave = document.getElementById('icon-clave');
+  const msInfoAlerta = document.getElementById('ms-info-alert');
+  const iconMail = document.getElementById('icon-mail');
+  const iconPassword = document.getElementById('icon-password');
+
+
   let claveOculta = 0;
 
   btnMostrarClave.addEventListener('click', () => {
@@ -31,7 +37,7 @@ const all = () => {
     const password = inputPassword.value;
     const name = inputName.value;
     if (btnIniciarRegistrar.dataset.action === 'login') {
-      autEmailPass(email, password);
+      autEmailPass(inputMail, inputPassword, msInfoAlerta, iconPassword);
     }
     if (btnIniciarRegistrar.dataset.action === 'registrar') {
       crearCuentaEmailPass(email, password, name);
@@ -43,11 +49,13 @@ const init = () => {
   changeView(window.location.hash);
   window.addEventListener('hashchange', () => {
     changeView(window.location.hash);
-    all();
+    all(); // Contiene las varibles y eventos.
   });
 };
+
 window.addEventListener('load', init);
 
+// Esto es temporal, Lulu dice que lo deje asi mientras.
 setTimeout(() => {
-  all();
+  all(); // Contiene las varibles y eventos.
 }, 700);
