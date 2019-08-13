@@ -33,14 +33,11 @@ const all = () => {
   });
   btnIniciarRegistrar.addEventListener('click', (e) => {
     e.preventDefault();
-    const email = inputMail.value;
-    const password = inputPassword.value;
-    const name = inputName.value;
     if (btnIniciarRegistrar.dataset.action === 'login') {
-      autEmailPass(inputMail, inputPassword, msInfoAlerta, iconPassword);
+      autEmailPass(inputMail, inputPassword, msInfoAlerta, iconPassword, iconMail);
     }
     if (btnIniciarRegistrar.dataset.action === 'registrar') {
-      crearCuentaEmailPass(email, password, name);
+      crearCuentaEmailPass(inputMail, inputPassword, inputName, msInfoAlerta, iconPassword, iconMail);
     }
   });
 };

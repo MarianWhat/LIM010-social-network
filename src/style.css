@@ -23,7 +23,6 @@
   list-style-type: none;
   box-sizing: border-box;
   outline: none;
-  user-select: none;
   position: relative;
 }
 .display-flex{
@@ -111,9 +110,8 @@ body{
   flex-direction: column;
   margin-top: 30px;
   width: 320px;
-  padding-bottom: 10px;
 }
-.text-login{margin-bottom: 25px;font-size: 18px;text-align: center;}
+.text-login{margin-bottom: 10px;font-size: 18px;text-align: center;}
 .login-input{
   font-size: 13px;
   width: 250px;
@@ -122,7 +120,7 @@ body{
   padding: 10px 15px;
   border-radius: 25px;
   border: 1px solid #67eaca;
-  margin-bottom: 15px;
+  margin-top: 15px;
 }
 .icon-input{
   background-size: cover;
@@ -135,9 +133,17 @@ body{
   border: 1px solid #ff0c19;
  
 }
+.ms-info-alert{
+  color: #ff0c19;
+  width: 250px;
+  text-align: center;
+  font-size: 12px;
+  margin: 7px 0 10px;
+  /* height: 30px; */
+}
 .icon-alert{
   background-image: url(img/icon-alert.png);
-  bottom: 24px;
+  bottom: 9px;
   right: -25px;
 }
 .icon-clave{
@@ -145,7 +151,7 @@ body{
   width: 17px;
   height: 17px;
   right: 13px;
-  bottom: 24px;
+  bottom: 10px;
 }
 .cont-acceso.click .icon-clave{
   opacity: 0.8;
