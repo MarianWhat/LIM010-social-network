@@ -10,26 +10,48 @@
 </head>
 <body>
   <main class="display-flex">
-    <section class="sec-autentificacion display-flex" id="container">      
-           
+    <section class="sec-autentificacion display-flex none" id="container">  
     </section>
+    <section class="container-net display-flex">
+        <div class="user-card">
+            <img id="photo-current-user" class="photo-current-user" src="">
+            <h2 id="name-current-user"></h2>
+            <span id="uid-current-user"></span>
+            <p id="mail-current-user" class="mail-user"></p>
+        </div>
+        <div class="container-post-form">
+            <form class="display-flex box-form-user active-publicar">
+                <textarea class="input-form-user"  id="content-to-post" placeholder="¿Tienes algo que contarnos?"></textarea>
+                 <img class="img-to-post" id="img-to-post" src="">
+                 <input id="btn-upload-img" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn btn-curve btn-icon icon-img">
+                    <button class="btn btn-form-user icon-text">
+                    <span class="btn-icon icon-privacidad"></span>Publico
+                    <span class="icon-arrow icon-arrow-bottom" id="arrow-bajo"></span>
+                    </button>
+                    <button class="btn btn-form-user btn-publicar" id="btn-create-post">Publicar</button>
+            </form>  
+            <div class="container-posts" id="container-posts"></div>
+            
+        </div>
+      </section>
   </main>
 
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script> <!--Obligatorio -->
  <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script> <!--Para usar Firestore-->
+<script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-storage.js"></script>
 <script type="module" src="main.js"></script>
 <script>
-const firebaseConfig = {  //varConfig
-  apiKey: 'AIzaSyCw3AYjSbsAeJ0dZsEAe_tocFzZk1rrr_o',
-  authDomain: 'prueba-51039.firebaseapp.com',
-  databaseURL: 'https://prueba-51039.firebaseio.com',
-  projectId: 'prueba-51039',
-  storageBucket: '',
-  messagingSenderId: '552919889245',
-  appId: '1:552919889245:web:df9179f3406b85ac'
-};
+const firebaseConfig = {
+    apiKey: "AIzaSyCw3AYjSbsAeJ0dZsEAe_tocFzZk1rrr_o",
+    authDomain: "prueba-51039.firebaseapp.com",
+    databaseURL: "https://prueba-51039.firebaseio.com",
+    projectId: "prueba-51039",
+    storageBucket: "prueba-51039.appspot.com",
+    messagingSenderId: "552919889245",
+    appId: "1:552919889245:web:df9179f3406b85ac"
+  };
 firebase.initializeApp(firebaseConfig);
 
 </script>

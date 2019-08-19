@@ -7,8 +7,8 @@ export const autEmailPass = (email, password, msInfoAlerta, iconPassword, iconMa
     .catch((error) => { // Para ver si devuelve un error
       switch (error.code) {
         case 'auth/invalid-email':
-            password.classList.remove('info-alert');
-            iconPassword.classList.remove('icon-alert');
+          password.classList.remove('info-alert');
+          iconPassword.classList.remove('icon-alert');
 
           email.classList.add('info-alert');
           iconMail.classList.add('icon-alert');
@@ -16,7 +16,7 @@ export const autEmailPass = (email, password, msInfoAlerta, iconPassword, iconMa
           msInfoAlerta.innerHTML = '**El formato del correo ingresado no es valido, verifica e intente de nuevo.';
           break;
         case 'auth/user-not-found':
-            password.classList.remove('info-alert');
+          password.classList.remove('info-alert');
           iconPassword.classList.remove('icon-alert');
 
           email.classList.add('info-alert');
@@ -41,7 +41,6 @@ export const autEmailPass = (email, password, msInfoAlerta, iconPassword, iconMa
 };
 
 export const crearCuentaEmailPass = (email, password, nombres, msInfoAlerta, iconPassword, iconMail) => {
-  console.log(password);
   firebase
     .auth() // método createUserWithEmailAndPassword
     .createUserWithEmailAndPassword(email.value, password.value)
@@ -52,17 +51,7 @@ export const crearCuentaEmailPass = (email, password, nombres, msInfoAlerta, ico
       });
     })
     .then(() => {
-      const user = firebase.auth().currentUser;
-      if (user != null) {
-        setTimeout(() => {
-          alert(`Bienvenid@ ${user.displayName}, tu registro fue exitoso.`);
-          // console.log(`Sign-in provider: ${user.providerId}`);
-          // console.log(`  Provider-specific UID: ${user.uid}`);
-          // console.log(`  Name: ${user.displayName}`);
-          // console.log(`  Email: ${user.email}`);
-          // console.log(`  Photo URL: ${user.photoURL}`);
-        }, 400);
-      }
+      // const user = firebase.auth().currentUser;
     })
     .catch((error) => { // Para ver si devuelve un error
       switch (error.code) {
@@ -115,14 +104,7 @@ export const authCuentaGoogle = () => {
     });
 };
 
-firebase.auth().onAuthStateChanged((user) => {
-  if (user) {
-    // User is signed in.
-    console.log(user.displayName);
-  } else {
-    // No user is signed in.
-  }
-});
+
 
 // Falta:
 // - Pasar codigo repetitivo a funcion
