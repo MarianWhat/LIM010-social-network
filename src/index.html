@@ -9,10 +9,9 @@
   <title>Social Network</title>
 </head>
 <body>
-  <main class="display-flex">
-    <section class="sec-autentificacion display-flex none" id="container">  
-    </section>
-    <section class="container-net display-flex">
+  <main class="display-flex" id="container-main">
+    
+    <!-- <section class="container-net display-flex">
         <div class="user-card">
             <img id="photo-current-user" class="photo-current-user" src="">
             <h2 id="name-current-user"></h2>
@@ -31,16 +30,24 @@
                     <button class="btn btn-form-user btn-publicar" id="btn-create-post">Publicar</button>
             </form>  
             <div class="container-posts" id="container-posts"></div>
-            
         </div>
-      </section>
+    </section> -->
+    
   </main>
+  <nav class="menu-chico none" id="menu-chico">
+      <ul>
+        <li class="icon-text btn-icon"><span class="btn-icon icon-privacidad-editar" ></span>Editar</li>
+        <li class="icon-text btn-icon"><span class="btn-icon icon-borrar"></span>Eliminar</li>
+      </ul>      
+    </nav>
+    <button id="menu-des">Menu</button>
 
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-app.js"></script> <!--Obligatorio -->
  <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-database.js"></script>  <!--RealTime -->
 <script src="https://www.gstatic.com/firebasejs/6.2.4/firebase-firestore.js"></script> <!--Para usar Firestore-->
-<script src="https://www.gstatic.com/firebasejs/5.5.2/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.10.1/firebase-storage.js"></script>
+
 <script type="module" src="main.js"></script>
 <script>
 const firebaseConfig = {

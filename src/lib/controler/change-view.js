@@ -1,8 +1,8 @@
-import { components } from '../view/index.js';
+import { components } from '../view/components-SPA.js';
 
 const changeView = (router) => {
-  const container = document.getElementById('container');
-  container.innerHTML = '<div class="banner display-flex"><h1>Codebook</h1><p class="text-login">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis at ante leo. Sed venenatis, nisl non maximus consequat.</p></div> ';
+  const container = document.getElementById('container-main');
+  container.innerHTML = '';
   switch (router) {
     case '': {
       return container.appendChild(components.inicioSesion()); }
@@ -10,6 +10,8 @@ const changeView = (router) => {
       return container.appendChild(components.inicioSesion()); }
     case '#/registro': {
       return container.appendChild(components.registro()); }
+    case '#/social-network': {
+      return container.appendChild(components.socialNetwork()); }
     default:
       break;
   }

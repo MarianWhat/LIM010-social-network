@@ -110,6 +110,9 @@ color: #272727;
 .flex {
   display: flex;
 }
+.block {
+  display: block;
+}
 .none {
   display:none !important;
 }
@@ -138,6 +141,7 @@ body{
   text-align: center;
   font-size: 12px;
   width: 100%;
+  margin-top: 30px;
 }
 .banner .text-login{
   display:none;
@@ -209,14 +213,13 @@ body{
 }
 .cont-btn-redes{
   width: 100%;
-  margin-top: 25px;
   flex-wrap: wrap;
 }
 .cont-btn-redes button{
   background-size: 60%;
   width: 37px;
   height: 37px;
-  margin: 15px 9px;
+  margin-top: 15px;
   cursor: pointer;
 }
 .btn-google{
@@ -251,8 +254,8 @@ font-size: 13px;
     justify-content: flex-end;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 0px 5px -2px;
-    margin-bottom: 40px;
+    box-shadow: 0px 0px 5px -3px #12d3cf;
+    margin-bottom: 30px;
 }
 .input-form-user{
     width: 100%;
@@ -260,12 +263,10 @@ font-size: 13px;
     padding: 16px 20px;
     border-radius: 8px;
     margin-bottom: 10px;
-    height: 50px;
+    height: 70px;
     transition: 0.5s;
 }
-.input-form-user:focus{
-   height:100px;
-}
+
 .img-to-post{
     width: 100%;
     margin-bottom: 15px;
@@ -300,7 +301,7 @@ font-size: 13px;
 /*Formulario Fin------------------------*/
 
 /*Post------------------------*/
-.box-post-user{background-color: white;width: 100%;border-radius: 8px;box-shadow: 0px 0px 5px -2px;padding: 20px;}
+.box-post-user{background-color: white;width: 100%;border-radius: 8px;box-shadow: 0px 0px 5px -3px #12d3cf;padding: 20px;margin: 20px 0;}
 .post-user-info{
 
 background-color: white;
@@ -347,7 +348,10 @@ width: 100%;
 .post-user-text{
     font-size: 14px;
 }
-.post-user-img{}
+.post-user-img{
+    width: 100%;
+    margin: 12px 0;
+}
 
 .post-user-nav{
     justify-content: end;
@@ -379,11 +383,6 @@ width: 100%;
 background-image: url(img/icon-comentario.png);
 }
 /*Post------------------------ Fin*/
-
-
-
-
-
 
 @media (min-width: 801px) {
 .banner{
