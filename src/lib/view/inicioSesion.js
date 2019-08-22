@@ -35,6 +35,7 @@ export default () => {
   const btnIniciarRegistrar = sectionElem.querySelector('#btn-iniciar-registrar');
   const btnMostrarClave = sectionElem.querySelector('#icon-clave');
   const msInfoAlerta = sectionElem.querySelector('#ms-info-alert');
+  const iconMail = sectionElem.querySelector('#icon-mail');
   const iconPassword = sectionElem.querySelector('#icon-password');
   let claveOculta = 0;
 
@@ -110,7 +111,5 @@ export default () => {
       btnMostrarClave.classList.remove('mostrar');
     }
   });
-
-
   return sectionElem;
 };

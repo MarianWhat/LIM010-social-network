@@ -1,4 +1,4 @@
-import { autEmailPass, crearCuentaEmailPass } from '../autenticacion.js';
+import { crearCuentaEmailPass } from '../autenticacion.js';
 
 export default () => {
   const viewRegistro = `
@@ -24,121 +24,78 @@ export default () => {
   sectionElem.setAttribute('class', 'sec-autentificacion display-flex');
   sectionElem.innerHTML += viewRegistro; // Hasta que no cree este elemento
 
-  setTimeout(() => {
-    const inputMail = document.getElementById('input-mail');
-    const inputPassword = document.getElementById('input-password');
-    const inputName = document.getElementById('input-name');
-    const btnIniciarRegistrar = document.getElementById('btn-iniciar-registrar');
-    const btnMostrarClave = document.getElementById('icon-clave');
-    const msInfoAlerta = document.getElementById('ms-info-alert');
-    const iconMail = document.getElementById('icon-mail');
-    const iconPassword = document.getElementById('icon-password');
-    let claveOculta = 0;
+  const inputMail = sectionElem.querySelector('#input-mail');
+  const inputName = sectionElem.querySelector('#input-name');
+  const inputPassword = sectionElem.querySelector('#input-password');
+  const btnIniciarRegistrar = sectionElem.querySelector('#btn-iniciar-registrar');
+  const btnMostrarClave = sectionElem.querySelector('#icon-clave');
+  const msInfoAlerta = sectionElem.querySelector('#ms-info-alert');
+  const iconMail = sectionElem.querySelector('#icon-mail');
+  const iconPassword = sectionElem.querySelector('#icon-password');
+  let claveOculta = 0;
 
-    btnIniciarRegistrar.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (btnIniciarRegistrar.dataset.action === 'login') {
-        autEmailPass(inputMail.value, inputPassword.value)
-          .then((resultXD) => {
-            const usuarioAct = resultXD.user.displayName;
-            window.location.hash = '#/social-network';
-          })
-          .catch((error) => { // Para ver si devuelve un error
-            switch (error.code) {
-              case 'auth/invalid-email':
-                inputPassword.classList.remove('info-alert');
-                iconPassword.classList.remove('icon-alert');
-
-                inputMail.classList.add('info-alert');
-                iconMail.classList.add('icon-alert');
-
-                msInfoAlerta.innerHTML = '**El formato del correo ingresado no es valido, verifica e intente de nuevo.';
-                break;
-              case 'auth/user-not-found':
-                inputPassword.classList.remove('info-alert');
-                iconPassword.classList.remove('icon-alert');
-
-                inputMail.classList.add('info-alert');
-                iconMail.classList.add('icon-alert');
-
-                msInfoAlerta.innerHTML = '**No hay usuario registrado con ese correo., verifica e intente de nuevo.';
-                break;
-              case 'auth/wrong-password':
-                inputMail.classList.remove('info-alert');
-                iconMail.classList.remove('icon-alert');
-
-                inputPassword.classList.add('info-alert');
-                iconPassword.classList.add('icon-alert');
-
-                msInfoAlerta.innerHTML = '**La contraseña no es válida, verifica e intente de nuevo.';
-                break;
-              default:
-                console.log(error);
-                break;
-            }
+  btnIniciarRegistrar.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (btnIniciarRegistrar.dataset.action === 'registrar') {
+      crearCuentaEmailPass(inputMail.value, inputPassword.value)
+        .then((resultXD) => {
+          resultXD.user.updateProfile({ // Para actualizar
+            displayName: inputName.value, // No podemos guardatos, solo podemos guardar una URL Img, nombre photoURL
           });
-      }
-      if (btnIniciarRegistrar.dataset.action === 'registrar') {
-        crearCuentaEmailPass(inputMail.value, inputPassword.value)
-          .then((resultXD) => {
-            resultXD.user.updateProfile({ // Para actualizar
-              displayName: inputName.value, // No podemos guardatos, solo podemos guardar una URL Img, nombre photoURL
-            });
-          })
-          .then(() => {
+        })
+        .then(() => {
 
-          })
-          .catch((error) => { // Para ver si devuelve un error
-            switch (error.code) {
-              case 'auth/invalid-email':
-                inputPassword.classList.remove('info-alert');
-                iconPassword.classList.remove('icon-alert');
+        })
+        .catch((error) => { // Para ver si devuelve un error
+          switch (error.code) {
+            case 'auth/invalid-email':
+              inputPassword.classList.remove('info-alert');
+              iconPassword.classList.remove('icon-alert');
 
-                inputMail.classList.add('info-alert');
-                iconMail.classList.add('icon-alert');
+              inputMail.classList.add('info-alert');
+              iconMail.classList.add('icon-alert');
 
-                msInfoAlerta.innerHTML = '**El formato del correo ingresado no es valido, verifica e intente de nuevo.';
-                break;
-              case 'auth/email-already-in-use':
-                inputPassword.classList.remove('info-alert');
-                iconPassword.classList.remove('icon-alert');
-                inputMail.classList.add('info-alert');
-                iconMail.classList.add('icon-alert');
-                msInfoAlerta.innerHTML = '**El correo electrónico proporcionado esta siendo utilizado por otro miembro., verifica e intente de nuevo.';
-                break;
-              case 'auth/email-already-exists':
-                inputPassword.classList.remove('info-alert');
-                iconPassword.classList.remove('icon-alert');
-                inputMail.classList.add('info-alert');
-                iconMail.classList.add('icon-alert');
-                msInfoAlerta.innerHTML = '**El correo electrónico proporcionado esta siendo utilizado por otro miembro., verifica e intente de nuevo.';
-                break;
-              case 'auth/weak-password':
-                inputMail.classList.remove('info-alert');
-                iconMail.classList.remove('icon-alert');
-                inputPassword.classList.add('info-alert');
-                iconPassword.classList.add('icon-alert');
-                msInfoAlerta.innerHTML = '**La contraseña debe tener al menos 6 caracteres.';
-                break;
-              default:
-                console.log(error);
-                break;
-            }
-          });
-      }
-    });
+              msInfoAlerta.innerHTML = '**El formato del correo ingresado no es valido, verifica e intente de nuevo.';
+              break;
+            case 'auth/email-already-in-use':
+              inputPassword.classList.remove('info-alert');
+              iconPassword.classList.remove('icon-alert');
+              inputMail.classList.add('info-alert');
+              iconMail.classList.add('icon-alert');
+              msInfoAlerta.innerHTML = '**El correo electrónico proporcionado esta siendo utilizado por otro miembro., verifica e intente de nuevo.';
+              break;
+            case 'auth/email-already-exists':
+              inputPassword.classList.remove('info-alert');
+              iconPassword.classList.remove('icon-alert');
+              inputMail.classList.add('info-alert');
+              iconMail.classList.add('icon-alert');
+              msInfoAlerta.innerHTML = '**El correo electrónico proporcionado esta siendo utilizado por otro miembro., verifica e intente de nuevo.';
+              break;
+            case 'auth/weak-password':
+              inputMail.classList.remove('info-alert');
+              iconMail.classList.remove('icon-alert');
+              inputPassword.classList.add('info-alert');
+              iconPassword.classList.add('icon-alert');
+              msInfoAlerta.innerHTML = '**La contraseña debe tener al menos 6 caracteres.';
+              break;
+            default:
+              console.log(error);
+              break;
+          }
+        });
+    }
+  });
 
-    btnMostrarClave.addEventListener('click', () => {
-      if (claveOculta === 0) {
-        inputPassword.setAttribute('type', 'text');
-        claveOculta = 1;
-        btnMostrarClave.classList.add('mostrar');
-      } else {
-        inputPassword.setAttribute('type', 'password');
-        claveOculta = 0;
-        btnMostrarClave.classList.remove('mostrar');
-      }
-    });
-  }, 700);
+  btnMostrarClave.addEventListener('click', () => {
+    if (claveOculta === 0) {
+      inputPassword.setAttribute('type', 'text');
+      claveOculta = 1;
+      btnMostrarClave.classList.add('mostrar');
+    } else {
+      inputPassword.setAttribute('type', 'password');
+      claveOculta = 0;
+      btnMostrarClave.classList.remove('mostrar');
+    }
+  });
   return sectionElem;
 };

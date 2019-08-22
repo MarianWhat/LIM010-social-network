@@ -8,7 +8,14 @@ export const templatePost = (imgUser, nameUser, contentPost, imgPost, datePost, 
         <button class="btn-curve btn-icon icon-privacidad"></button>
       </div>
     </div>
-    <button class="btn btn-curve btn-icon icon-menu-puntos"></button>
+    <button class="btn btn-curve btn-icon icon-menu-puntos" id="icon-menu-puntos"></button>
+    <nav class="list-menu" id="list-menu">
+        <ul>
+          <li class="icon-text"><span class="btn-icon icon-privacidad-editar" ></span>Editar</li>
+          <span class="line-horizontal"></span>
+          <li class="icon-text"><span class="btn-icon icon-borrar"></span>Eliminar</li>
+        </ul>      
+      </nav>
 </div>
   <div class="post-user-cont">
     <p class="post-user-text">${contentPost}</p>

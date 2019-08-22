@@ -3,12 +3,15 @@ import { templatePost } from './template.js';
 
 export default () => {
   const socialNetworkView = `
-  <div class="user-card">
-  <img id="photo-current-user" class="photo-current-user" src="">
-  <h2 id="name-current-user"></h2>
-  <span id="uid-current-user"></span>
-  <p id="mail-current-user" class="mail-user"></p>
-</div>
+  <div class="user-card display-flex">
+    <img id="photo-current-user" class="photo-current-user" src="">
+    <div class="user-card-info">
+        <h2 id="name-current-user"></h2>
+        <span id="uid-current-user"></span>
+        <p id="mail-current-user" class="mail-user"></p>
+    </div>
+  </div>
+  
 <div class="container-post-form">
   <form class="display-flex box-form-user active-publicar">
       <textarea class="input-form-user"  id="content-to-post" placeholder="¿Tienes algo que contarnos?"></textarea>
@@ -37,8 +40,21 @@ export default () => {
     const contentToPost = document.getElementById('content-to-post');
     const btnCreatePost = document.getElementById('btn-create-post');
     const containerPosts = document.getElementById('container-posts');
-    // const menuPuntos = containerSocialNetworkViewElem.querySelector('.icon-menu-puntos');
-    // console.log(menuPuntos);
+    const iconMenuPuntos = document.getElementById('icon-menu-puntos');
+    const listMenu = document.getElementById('list-menu');
+    let menuStatus = 0;
+
+    iconMenuPuntos.addEventListener('click', () => {
+      if (menuStatus === 0) {
+        listMenu.classList.add('block');
+        listMenu.classList.remove('none');
+        menuStatus = 1;
+      } else {
+        listMenu.classList.add('none');
+        listMenu.classList.remove('block');
+        menuStatus = 0;
+      }
+    });
 
 
     const showPosts = (data) => {
@@ -113,17 +129,14 @@ export default () => {
     });
     // Limpiar Form
 
-
     // firebase.auth().onAuthStateChanged(user => console.log(user));
     const user = firebase.auth().currentUser;
-     if (user) {
-        photoCurrentUser.setAttribute('src', user.photoURL === null ? 'img/photo-default.png' : user.photoURL);
-        nameCurrentUser.textContent = user.displayName;
-        uidCurrentUser.textContent = user.uid;
-        mailCurrentUser.textContent = user.email;
-     }
-  
-
+    if (user) {
+      photoCurrentUser.setAttribute('src', user.photoURL === null ? 'img/photo-default.png' : user.photoURL);
+      nameCurrentUser.textContent = user.displayName;
+      uidCurrentUser.textContent = user.uid;
+      mailCurrentUser.textContent = user.email;
+    }
     actualizarPost();
   }, 700);
   return containerSocialNetworkViewElem;
