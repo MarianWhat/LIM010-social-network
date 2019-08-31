@@ -9,14 +9,26 @@ export const createPost = (uidUser, nameUser,
     content,
     totalLike: 0,
     imgUrlPost: sessionStorage.getItem('urlImgToPost') === null ? '' : sessionStorage.getItem('urlImgToPost'),
-    publicationDate: firebase.firestore.FieldValue.serverTimestamp(),
+    publicationDate: new Date(),
   });
+  // publicationDate: firebase.firestore.FieldValue.serverTimestamp()
 
 export const checkAllPost = () => firebase.firestore().collection('posts')
-  .where('typePrivacy', '==', 0)
   .orderBy('publicationDate', 'desc')
   .get();
 
+export const updatePost = post => post.update({
+  typePrivacy: '1',
+  content: 'Actualizado Hey',
+  // imgUrlPost: sessionStorage.getItem('urlImgToPost') === null ? post.data().imgUrlUser : sessionStorage.getItem('urlImgToPost'),
+});
+
+// export const checkAllPost = () => firebase.firestore().collection('posts').onSnapshot(doc => doc);
+export const checkPrivatePost = userActiveUid => firebase.firestore().collection('posts')
+  .where('typePrivacy', '==', '1')
+  .where('uidUser', '==', userActiveUid)
+  .orderBy('publicationDate', 'desc')
+  .get();
 // Falta acomodar
 export const uploadImgPost = (imgFile, uidUser, imgToPost) => {
   if (imgFile) {
@@ -35,12 +47,18 @@ export const uploadImgPost = (imgFile, uidUser, imgToPost) => {
         upload.snapshot.ref.getDownloadURL()
           .then((url) => {
             console.log(url);
-            sessionStorage.setItem('urlImgToPost', url);
+            sessionStorage.setItem('urlImgToPost', url); //  Url a usar XD
             imgToPost.setAttribute('src', url);
-
-            return url; //  Url a usar XD
+            // return url;
           })
           .catch(error => console.log(error));
       });
   }
 };
+export const deletePost = post => firebase.firestore().collection('posts').doc(post).delete();
+// .then(() => {
+//   console.log("Document successfully deleted!");
+// })
+// .catch((error) => {
+//   console.error("Error removing document: ", error);
+// });

@@ -41,11 +41,10 @@ export default () => {
 
   loginGoogle.addEventListener('click', (e) => {
     e.preventDefault();
+
     authCuentaGoogle()
-      .then((respuestaXD) => {
-        const infoUser = respuestaXD.user;
-        console.log(infoUser);
-        // alert(`Bienvenid@ ${infoUser.displayName}, has ingresado con exito.`);
+      .then(() => {
+        window.location.hash = '#/social-network';
       })
       .catch((error) => { // Para ver si devuelve un error
         console.log(error);

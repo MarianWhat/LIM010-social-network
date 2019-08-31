@@ -1,5 +1,6 @@
 import { components } from '../view/components-SPA.js';
 
+// eslint-disable-next-line consistent-return
 const changeView = (router) => {
   const container = document.getElementById('container-main');
   container.innerHTML = '';

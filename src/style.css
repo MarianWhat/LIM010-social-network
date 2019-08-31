@@ -66,6 +66,7 @@ color: #272727;
   padding: 0px;
   border-radius: 50px;
   cursor: pointer;
+  border: 1px solid #67eaca;
 }
 .btn-icon{
   display: inline-block;
@@ -77,6 +78,7 @@ color: #272727;
   height: 20px;
   width: 20px;
   cursor: pointer;
+  opacity: 0.8;
 }
 .btn-icon:hover{
   transform: scale(1.1);
@@ -111,8 +113,6 @@ color: #272727;
 }
 .list-menu{
   position: absolute;
-  top: 0;
-  right: 19px;
   width: min-content;
   background-color: white;
   justify-content: flex-end;
@@ -120,21 +120,25 @@ color: #272727;
   border-radius: 8px;
   box-shadow: 0px 0px 7px -3px #67eaca;
   border: 1px solid #67eaca;
+  z-index: 1;
   }
+
 .list-menu .icon-text:hover{
     font-weight: bold;
     color: black;
 }
-.list-menu .icon-text{
-  
-}
 .list-menu .icon-text:nth-child(1){/* border-bottom: 1px solid #272727; */}
-.icon-privacidad-editar{
-
-background-image: url(img/icon-editar.png);
+.icon-edit{
+background-image: url(img/icon-edit.png);
 }
-.icon-borrar{
-    background-image: url(img/icon-borrar.png);
+.icon-delete{
+    background-image: url(img/icon-delete.png);
+}
+.icon-public{
+  background-image: url(img/icon-public.png);
+}
+.icon-private{
+  background-image: url(img/icon-private.png);
 }
 .flex {
   display: flex;
@@ -143,7 +147,7 @@ background-image: url(img/icon-editar.png);
   display: block;
 }
 .none {
-  display:none !important;
+  display:none;
 }
 /*------------------------*/
 body{
@@ -306,7 +310,6 @@ body{
 .icon-img{
   width: 40px;
   height: 40px;
-  border: 1px solid #67eaca;
 }
 .icon-img:before{
   content:"";
@@ -327,8 +330,9 @@ body{
     background-color: #12d3cf;
     color: white;
 }
-.icon-privacidad{
-  background-image: url(img/icon-privacidad-publico.png);
+.box-form-user .list-menu{
+    bottom: -56px;
+    right: 132px;
 }
 /*Formulario Fin------------------------*/
 
@@ -364,7 +368,8 @@ width: 100%;
     font-weight: bold;
 }
 
-.box-post-user .icon-privacidad{border: 1px solid #67eaca;background-color: initial;background-size: 55%;height: 25px;width: 25px;}
+.box-post-user .icon-public, 
+.box-post-user .icon-private{border: 1px solid #67eaca;background-color: initial;background-size: 55%;height: 25px;width: 25px;}
 .icon-menu-puntos{
     position: absolute;
     background-color: initial;
@@ -414,6 +419,11 @@ width: 100%;
   
 background-image: url(img/icon-comentario.png);
 }
+.box-post-user .list-menu{
+  top: 0;
+  right: 19px;
+  
+  }
 /*Post------------------------ Fin*/
 
 @media (min-width: 801px) {
@@ -453,5 +463,8 @@ flex-direction: row;
   width: 50%;
   height: 100%;
   margin: 0;
+}
+.container-net{
+    flex-wrap: nowrap;
 }
 }
