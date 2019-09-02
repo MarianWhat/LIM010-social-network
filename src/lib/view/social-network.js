@@ -2,7 +2,7 @@
 import {
   createPost, uploadImgPost, checkAllPost, deletePost, updatePost,
 } from '../post.js';
-import { templatePost } from './template.js';
+import { templatePost, templateFormUpdatePost } from './template.js';
 
 export default () => {
   const socialNetworkView = `
@@ -53,8 +53,6 @@ export default () => {
   const btnPublic = containerSocialNetworkViewElem.querySelector('#btn-public');
   const btnPrivate = containerSocialNetworkViewElem.querySelector('#btn-private');
   const textPrivacy = containerSocialNetworkViewElem.querySelector('#text-privacy');
-  const containerPostForm = containerSocialNetworkViewElem.querySelector('.container-post-form');
-  
   let menuStatusPrivacy = 0;
   let menuStatus = 0;
 
@@ -66,23 +64,6 @@ export default () => {
         <li class="icon-text btn-delete-post"><span class="btn-icon icon-delete"></span>Eliminar</li>
       </ul>      
     </nav>`;
-  const templateUpdatePost = `<form class="display-flex box-form-user">
-  <textarea class="input-form-user"  id="content-to-post" placeholder="¿Tienes algo que contarnos?"></textarea>
-   <img class="img-to-post" id="img-to-post" src="">
-   <input id="btn-upload-img" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn btn-curve btn-icon icon-img">
-   <button class="btn btn-form-user icon-text" id="btn-privacy" data-privacy='0'>
-     <span class="btn-icon icon-public"></span><span id="text-privacy">Publico</span>
-     <span class="icon-arrow icon-arrow-bottom"></span>
-    </button>
-    <nav class="list-menu none">
-      <ul>
-        <li class="icon-text" id="btn-public"><span class="btn-icon icon-public" ></span>Publico</li>
-        <span class="line-horizontal"></span>
-        <li class="icon-text" id="btn-private"><span class="btn-icon icon-private" ></span>Solo yo</li>
-      </ul>
-    </nav>
-    <button class="btn btn-form-user btn-publicar" id="btn-create-post">Publicar</button>
-</form>`;
 
   const userActive = () => {
     const user = firebase.auth().currentUser;
@@ -96,7 +77,6 @@ export default () => {
   const showPosts = (data) => {
     const user = firebase.auth().currentUser;
     containerPosts.innerHTML = '';
-    // eslint-disable-next-line consistent-return
     data.forEach((post) => {
       const privacy = post.typePrivacy === '0' ? 'icon-public' : 'icon-private';
       const menuList = post.uidUser === user.uid ? templateMenuList : '';
@@ -123,7 +103,8 @@ export default () => {
           privacy,
           menuList,
         );
-      } else if (post.typePrivacy === '0') {
+      }
+      if (post.typePrivacy === '0') {
         containerPosts.innerHTML += templatePost(
           post.idPost,
           post.imgUrlUser,
@@ -135,16 +116,11 @@ export default () => {
           privacy,
           menuList,
         );
-      } else {
-        return false;
       }
     });
     const iconMenuPuntos = containerPosts.querySelectorAll('.icon-menu-puntos');
-    let idPost = '';
     iconMenuPuntos.forEach((elemento) => {
       elemento.addEventListener('click', (e) => {
-        idPost = '';
-        idPost = e.target.parentElement.id;
         if (menuStatus === 0) {
           e.target.nextElementSibling.classList.toggle('none');
           menuStatus = 1;
@@ -155,17 +131,19 @@ export default () => {
       });
     });
     const btnDeletePost = containerPosts.querySelectorAll('.btn-delete-post');
+    let idPost = '';
     btnDeletePost.forEach((elemento) => {
       elemento.addEventListener('click', (e) => {
+        idPost = e.target.parentElement.parentElement.parentElement.parentElement.id;
         if (idPost !== '') {
           deletePost(idPost)
             .then(() => {
               e.target.parentElement.parentElement.classList.toggle('none');
-              // eslint-disable-next-line no-use-before-define
-              actualizarPost();
+              checkPublications();
               menuStatus = 0;
             })
             .catch((error) => {
+              // eslint-disable-next-line no-console
               console.log('Error al eliminar: ', error);
             });
         }
@@ -174,27 +152,36 @@ export default () => {
     const btnUpdatePost = containerPosts.querySelectorAll('.btn-update-post');
     btnUpdatePost.forEach((elemento) => {
       elemento.addEventListener('click', (e) => {
-        console.log(e.target.parentElement.parentElement.parentElement.parentElement);
-        const eleL = e.target.parentElement.parentElement.parentElement.parentElement;
-        containerPostForm.replaceChild(templateUpdatePost, eleL);
-        
-        if (idPost !== '') {
-          const post = firebase.firestore().collection('posts').doc(idPost);
-          updatePost(post)
-            .then(() => {
-              e.target.parentElement.parentElement.classList.toggle('none');
-              // eslint-disable-next-line no-use-before-define
-              actualizarPost();
-              menuStatus = 0;
-            })
-            .catch((error) => {
-              console.log('Error al eliminar: ', error);
-            });
-        }
+        idPost = e.target.parentElement.parentElement.parentElement.parentElement.id;
+        firebase.firestore().collection('posts').doc(idPost).get()
+          .then((post) => {
+            const formUpdate = document.createElement('form');
+            formUpdate.setAttribute('id', idPost);
+            formUpdate.setAttribute('class', 'box-form-user');
+            formUpdate.innerHTML = templateFormUpdatePost(`<textarea class="input-form-user" id="content-to-post" placeholder="¿Tienes algo que contarnos?">${post.data().content}</textarea>`,
+              post.data().imgUrlPost,
+              post.data().typePrivacy);
+            const elementPost = e.target.parentElement.parentElement.parentElement.parentElement;
+            containerPosts.replaceChild(formUpdate, elementPost);
+          });
+
+
+        // if (idPost !== '') {
+        //   updatePost(post)
+        //     .then(() => {
+        //       e.target.parentElement.parentElement.classList.toggle('none'); // Es el NavPuntos
+        //       // eslint-disable-next-line no-use-before-define
+        //       actualizarPost();
+        //       menuStatus = 0;
+        //     })
+        //     .catch((error) => {
+        //       console.log('Error al eliminar: ', error);
+        //     });
+        // }
       });
     });
   };
-  const actualizarPost = () => {
+  const checkPublications = () => {
     checkAllPost()
       .then((querySnapshot) => {
         const arr = [];
@@ -220,30 +207,10 @@ export default () => {
         showPosts(data);
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.log('Error getting documents: ', error);
       });
   };
-  // const actualizarPost = () => {
-  //   const arr = [];
-  //   userActive();
-  //   const yQuePromesa = checkAllPost();
-  //   yQuePromesa.forEach((post) => {
-  //     const obj = {
-  //       idPost: post.id,
-  //       nameUser: post.data().nameUser,
-  //       uidUser: post.data().uidUser,
-  //       imgUrlUser: post.data().imgUrlUser === null ? 'img/photo-default.png' : post.data().imgUrlUser,
-  //       typePrivacy: post.data().typePrivacy,
-  //       content: post.data().content,
-  //       totalLike: post.data().totalLike,
-  //       imgUrlPost: post.data().imgUrlPost === null ? '' : post.data().imgUrlPost,
-  //       publicationDate: post.data().publicationDate,
-
-  //     };
-  //     arr.push(obj);
-  //   });
-  //   return arr;
-  // };
   const clearFormPost = () => {
     contentToPost.value = '';
     imgToPost.setAttribute('src', '');
@@ -258,7 +225,7 @@ export default () => {
       createPost(user.uid, user.displayName, user.photoURL, contentToPost.value, privacy)
         .then(() => {
           // console.log(refDof.id);
-          actualizarPost();
+          checkPublications();
           clearFormPost();
           sessionStorage.clear();
         })
@@ -299,7 +266,7 @@ export default () => {
   //
   // removeAttribute().
   sessionStorage.clear();
-  actualizarPost();
+  checkPublications();
 
   // Real Time
   firebase.firestore().collection('posts')

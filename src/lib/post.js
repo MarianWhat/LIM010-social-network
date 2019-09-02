@@ -20,10 +20,9 @@ export const checkAllPost = () => firebase.firestore().collection('posts')
 export const updatePost = post => post.update({
   typePrivacy: '1',
   content: 'Actualizado Hey',
+  // eslint-disable-next-line max-len
   // imgUrlPost: sessionStorage.getItem('urlImgToPost') === null ? post.data().imgUrlUser : sessionStorage.getItem('urlImgToPost'),
 });
-
-// export const checkAllPost = () => firebase.firestore().collection('posts').onSnapshot(doc => doc);
 export const checkPrivatePost = userActiveUid => firebase.firestore().collection('posts')
   .where('typePrivacy', '==', '1')
   .where('uidUser', '==', userActiveUid)
@@ -36,12 +35,15 @@ export const uploadImgPost = (imgFile, uidUser, imgToPost) => {
       .put(imgFile); // Lo sube
     upload.on('state_changed',
       (infoUpload) => {
+        // eslint-disable-next-line no-console
         console.log(infoUpload);
         const porc = infoUpload.bytesTransferred / infoUpload.totalBytes * 100;
+        // eslint-disable-next-line no-console
         console.log(infoUpload, porc);
 
         // e3e0nten.setAttribute('style', `alto: ${porc}%`);
       },
+      // eslint-disable-next-line no-console
       error => console.log('Error subiendo la img:', error),
       () => {
         upload.snapshot.ref.getDownloadURL()
