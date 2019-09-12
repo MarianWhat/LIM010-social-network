@@ -1,50 +1,58 @@
-/* eslint-disable no-tabs */
 import {
   createPost, uploadImgPost, checkAllPost, deletePost, updatePost,
 } from '../post.js';
 import { templatePost, templateFormUpdatePost } from './template.js';
 
-export default () => {
+export default (userObj) => {
   const socialNetworkView = `
   <div class="user-card display-flex">
     <img id="photo-current-user" class="photo-current-user" src="">
     <div class="user-card-info">
         <h2 id="name-current-user"></h2>
-        <span id="uid-current-user"></span>
         <p id="mail-current-user" class="mail-user"></p>
     </div>
+  <button class="btn btn-form-user btn-publicar" id="close">Cerrar Sesión</button>
+
   </div>
   <div class="container-post-form">
-	<form class="display-flex box-form-user">
+    <form class="display-flex box-form-user">
         <textarea class="input-form-user"  id="content-to-post" placeholder="¿Tienes algo que contarnos?"></textarea>
-         <img class="img-to-post" id="img-to-post" src="">
-         <input id="btn-upload-img" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn btn-curve btn-icon icon-img">
+         <div class="img-loading-container">
+          <span class="none remove-img btn-icon icon-img" id="btn-remove-img" title="Quitar imagen"></span>
+                <input id="btn-upload-img" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn-upload-img">
+                <img class="img-to-post" id="img-to-post" src="">
+                <div class="container-more-percentage">
+                <span class="icon-more btn-icon icon-img"></span><br>
+                <span class="load-percentage">Agrega una imagen</span>
+                </div>
+            </div>
          <button class="btn btn-form-user icon-text" id="btn-privacy" data-privacy='0'>
-					 <span class="btn-icon icon-public"></span><span id="text-privacy">Publico</span>
-					 <span class="icon-arrow icon-arrow-bottom"></span>
-					</button>
-					<nav class="list-menu none">
-						<ul>
-							<li class="icon-text" id="btn-public"><span class="btn-icon icon-public" ></span>Publico</li>
-							<span class="line-horizontal"></span>
-							<li class="icon-text" id="btn-private"><span class="btn-icon icon-private" ></span>Solo yo</li>
-						</ul>
-					</nav>
-					<button class="btn btn-form-user btn-publicar" id="btn-create-post">Publicar</button>
-	</form>
-	<div class="container-posts" id="container-posts"></div>
+         <span class="btn-icon icon-public"></span><span id="text-privacy">Publico</span>
+         <span class="icon-arrow icon-arrow-bottom"></span>
+         </button>
+         <nav class="list-menu none">
+         <ul>
+          <li class="icon-text" id="btn-public"><span class="btn-icon icon-public" ></span>Publico</li>
+          <span class="line-horizontal"></span>
+          <li class="icon-text" id="btn-private"><span class="btn-icon icon-private" ></span>Solo yo</li>
+        </ul>
+        </nav>
+        <button class="btn btn-form-user btn-publicar" id="btn-create-post">Publicar</button>
+      </form>
+      <div class="container-posts" id="container-posts"></div>
 </div>
 `;
   const containerSocialNetworkViewElem = document.createElement('section');
   containerSocialNetworkViewElem.setAttribute('id', 'container-net');
   containerSocialNetworkViewElem.setAttribute('class', 'container-net display-flex');
   containerSocialNetworkViewElem.innerHTML += socialNetworkView;
-
   const btnUploadImg = containerSocialNetworkViewElem.querySelector('#btn-upload-img');
   const imgToPost = containerSocialNetworkViewElem.querySelector('#img-to-post');
+  const btnRemoveImg = containerSocialNetworkViewElem.querySelector('#btn-remove-img');
+  const containerMorePercentage = containerSocialNetworkViewElem.querySelector('.container-more-percentage');
+  const loadPercentage = containerSocialNetworkViewElem.querySelector('.load-percentage');
   const photoCurrentUser = containerSocialNetworkViewElem.querySelector('#photo-current-user');
   const nameCurrentUser = containerSocialNetworkViewElem.querySelector('#name-current-user');
-  const uidCurrentUser = containerSocialNetworkViewElem.querySelector('#uid-current-user');
   const mailCurrentUser = containerSocialNetworkViewElem.querySelector('#mail-current-user');
   const contentToPost = containerSocialNetworkViewElem.querySelector('#content-to-post');
   const btnCreatePost = containerSocialNetworkViewElem.querySelector('#btn-create-post');
@@ -53,6 +61,7 @@ export default () => {
   const btnPublic = containerSocialNetworkViewElem.querySelector('#btn-public');
   const btnPrivate = containerSocialNetworkViewElem.querySelector('#btn-private');
   const textPrivacy = containerSocialNetworkViewElem.querySelector('#text-privacy');
+  const close = containerSocialNetworkViewElem.querySelector('#close');
   let menuStatusPrivacy = 0;
   let menuStatus = 0;
 
@@ -65,15 +74,15 @@ export default () => {
       </ul>      
     </nav>`;
 
-  const userActive = () => {
-    const user = firebase.auth().currentUser;
-    if (user != null) {
-      photoCurrentUser.setAttribute('src', user.photoURL === null ? 'img/photo-default.png' : user.photoURL);
-      nameCurrentUser.textContent = user.displayName;
-      uidCurrentUser.textContent = user.uid;
-      mailCurrentUser.textContent = user.email;
-    }
-  };
+
+  if (userObj) {
+    photoCurrentUser.setAttribute('src', userObj.photoURL === null ? 'img/photo-default.png' : userObj.photoURL);
+    nameCurrentUser.textContent = userObj.displayName;
+    mailCurrentUser.textContent = userObj.email;
+  } else {
+    window.location.hash = '#';
+  }
+
   const showPosts = (data) => {
     const user = firebase.auth().currentUser;
     containerPosts.innerHTML = '';
@@ -139,7 +148,6 @@ export default () => {
           deletePost(idPost)
             .then(() => {
               e.target.parentElement.parentElement.classList.toggle('none');
-              checkPublications();
               menuStatus = 0;
             })
             .catch((error) => {
@@ -157,77 +165,81 @@ export default () => {
           .then((post) => {
             const formUpdate = document.createElement('form');
             formUpdate.setAttribute('id', idPost);
-            formUpdate.setAttribute('class', 'box-form-user');
-            formUpdate.innerHTML = templateFormUpdatePost(`<textarea class="input-form-user" id="content-to-post" placeholder="¿Tienes algo que contarnos?">${post.data().content}</textarea>`,
-              post.data().imgUrlPost,
-              post.data().typePrivacy);
+            formUpdate.setAttribute('class', 'display-flex box-form-user');
+            formUpdate.innerHTML = templateFormUpdatePost(`<textarea class="input-form-user" id="content-to-post-update" placeholder="¿Tienes algo que contarnos?">${post.data().content}</textarea>`,
+              post.data().imgUrlPost);
             const elementPost = e.target.parentElement.parentElement.parentElement.parentElement;
             containerPosts.replaceChild(formUpdate, elementPost);
+
+            const btnPrivacyUpdate = formUpdate.querySelector('.btn-privacy-update');
+            btnPrivacyUpdate.addEventListener('click', (a) => {
+              a.preventDefault();
+              if (menuStatusPrivacy === 0) {
+                btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
+                menuStatusPrivacy = 1;
+              } else {
+                btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
+                menuStatusPrivacy = 0;
+              }
+            });
+            const btnPublicUpdate = formUpdate.querySelector('.btn-public-update');
+            btnPublicUpdate.addEventListener('click', () => {
+              btnPrivacyUpdate.children[0].classList.replace('icon-private', 'icon-public');
+              btnPrivacyUpdate.setAttribute('data-privacy', 0);
+              btnPrivacyUpdate.children[1].textContent = 'Publico';
+              btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
+              menuStatusPrivacy = 0;
+            });
+            const btnPrivateUpdate = formUpdate.querySelector('.btn-private-update');
+            btnPrivateUpdate.addEventListener('click', () => {
+              btnPrivacyUpdate.children[0].classList.replace('icon-public', 'icon-private');
+              btnPrivacyUpdate.setAttribute('data-privacy', 1);
+              btnPrivacyUpdate.children[1].textContent = 'Solo yo';
+              btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
+              menuStatusPrivacy = 0;
+            });
+            const contentToPostUpdate = formUpdate.querySelector('#content-to-post-update');
+            const btnUpdatePostYa = formUpdate.querySelector('#btn-update-post');
+            btnUpdatePostYa.addEventListener('click', (a) => {
+              a.preventDefault();
+              const postd = firebase.firestore().collection('posts').doc(idPost);
+              if (idPost !== '') {
+                updatePost(postd, contentToPostUpdate.value, btnPrivacyUpdate.getAttribute('data-privacy'));
+                // checkPublications();
+              }
+            });
           });
-
-
-        // if (idPost !== '') {
-        //   updatePost(post)
-        //     .then(() => {
-        //       e.target.parentElement.parentElement.classList.toggle('none'); // Es el NavPuntos
-        //       // eslint-disable-next-line no-use-before-define
-        //       actualizarPost();
-        //       menuStatus = 0;
-        //     })
-        //     .catch((error) => {
-        //       console.log('Error al eliminar: ', error);
-        //     });
-        // }
       });
     });
   };
+  const mostrarCargaImg = (info) => {
+    loadPercentage.textContent = info;
+  };
   const checkPublications = () => {
-    checkAllPost()
-      .then((querySnapshot) => {
-        const arr = [];
-        userActive();
-        querySnapshot.forEach((post) => {
-          const obj = {
-            idPost: post.id,
-            nameUser: post.data().nameUser,
-            uidUser: post.data().uidUser,
-            imgUrlUser: post.data().imgUrlUser === null ? 'img/photo-default.png' : post.data().imgUrlUser,
-            typePrivacy: post.data().typePrivacy,
-            content: post.data().content,
-            totalLike: post.data().totalLike,
-            imgUrlPost: post.data().imgUrlPost === null ? '' : post.data().imgUrlPost,
-            publicationDate: post.data().publicationDate,
-
-          };
-          arr.push(obj);
-        });
-        return arr;
-      })
-      .then((data) => {
-        showPosts(data);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.log('Error getting documents: ', error);
-      });
+    checkAllPost(showPosts);
   };
   const clearFormPost = () => {
     contentToPost.value = '';
     imgToPost.setAttribute('src', '');
+    btnRemoveImg.classList.add('none');
+    containerMorePercentage.classList.remove('none');
+    loadPercentage.textContent = 'Agrega una imagen';
+    btnUploadImg.value = '';
   };
+  const stateChanged = () => {
+    
+  }
   // Eventos
   btnCreatePost.addEventListener('click', (e) => {
     e.preventDefault();
     const user = firebase.auth().currentUser;
     const privacy = btnPrivacy.getAttribute('data-privacy');
-
+    const imgUrlUser = user.photoURL === null ? 'img/photo-default.png' : user.photoURL;
     if (user) {
-      createPost(user.uid, user.displayName, user.photoURL, contentToPost.value, privacy)
+      createPost(user.uid, user.displayName, imgUrlUser, contentToPost.value, imgToPost.getAttribute('src'), privacy, new Date())
         .then(() => {
           // console.log(refDof.id);
-          checkPublications();
           clearFormPost();
-          sessionStorage.clear();
         })
         // eslint-disable-next-line no-console
         .catch(error => console.log(error));
@@ -236,11 +248,25 @@ export default () => {
   btnUploadImg.addEventListener('change', (e) => {
     const imgFile = e.target.files[0];
     const user = firebase.auth().currentUser;
-    uploadImgPost(imgFile, user.uid, imgToPost);
+    uploadImgPost(imgFile, user.uid, imgToPost, mostrarCargaImg,
+      btnRemoveImg, containerMorePercentage);
+  });
+  btnRemoveImg.addEventListener('click', () => {
+    sessionStorage.clear();
+    imgToPost.setAttribute('src', '');
+    btnRemoveImg.classList.toggle('none');
+    containerMorePercentage.classList.toggle('none');
+  });
+  close.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    firebase.auth().signOut()
+      .then(() => {
+        window.location.hash = '#';
+      });
   });
   btnPrivacy.addEventListener('click', (e) => {
     e.preventDefault();
-    // console.log('e.target.parentElement.id', e.target.parentElement.id);
     if (menuStatusPrivacy === 0) {
       btnPrivacy.nextElementSibling.classList.toggle('none');
       menuStatusPrivacy = 1;
@@ -263,30 +289,7 @@ export default () => {
     btnPrivacy.nextElementSibling.classList.toggle('none');
     menuStatusPrivacy = 0;
   });
-  //
-  // removeAttribute().
-  sessionStorage.clear();
   checkPublications();
-
-  // Real Time
-  firebase.firestore().collection('posts')
-    .onSnapshot((doc) => {
-      doc.forEach((post) => {
-        // eslint-disable-next-line no-console
-        console.log(post.data().content);
-      });
-    });
-
-  // firebase.auth().onAuthStateChanged((user) => {
-  //   if (user) {
-  //     photoCurrentUser.setAttribute('src', user.photoURL === null ? 'img/photo-default.png' : user.photoURL);
-  //     nameCurrentUser.textContent = user.displayName;
-  //     uidCurrentUser.textContent = user.uid;
-  //     mailCurrentUser.textContent = user.email;
-  //   } else {
-  //     window.location.hash = '#';
-  //   }
-  // });
-
+  // removeAttribute().
   return containerSocialNetworkViewElem;
 };

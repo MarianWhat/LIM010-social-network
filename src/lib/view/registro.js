@@ -40,7 +40,7 @@ export default () => {
       crearCuentaEmailPass(inputMail.value, inputPassword.value)
         .then((resultXD) => {
           resultXD.user.updateProfile({ // Para actualizar
-            displayName: inputName.value, // No podemos guardatos, solo podemos guardar una URL Img, nombre photoURL
+            displayName: inputName.value,
           });
         })
         .then(() => {
@@ -79,7 +79,7 @@ export default () => {
               msInfoAlerta.innerHTML = '**La contraseña debe tener al menos 6 caracteres.';
               break;
             default:
-              console.log(error);
+              // console.log(error);
               break;
           }
         });

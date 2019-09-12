@@ -1,4 +1,6 @@
 import { components } from '../view/components-SPA.js';
+import { checkUser } from '../autenticacion.js';
+
 
 // eslint-disable-next-line consistent-return
 const changeView = (router) => {
@@ -12,7 +14,8 @@ const changeView = (router) => {
     case '#/registro': {
       return container.appendChild(components.registro()); }
     case '#/social-network': {
-      return container.appendChild(components.socialNetwork()); }
+      checkUser(userObj => container.appendChild(components.socialNetwork(userObj))); }
+    // eslint-disable-next-line no-fallthrough
     default:
       break;
   }

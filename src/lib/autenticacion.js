@@ -4,8 +4,15 @@ export const autEmailPass = (email, password) => firebase.auth()
 export const crearCuentaEmailPass = (email, password) => firebase.auth()
   .createUserWithEmailAndPassword(email, password);
 
-// firebase.auth().signOut() Es para cerrar la secion del usuario
 export const authCuentaGoogle = () => firebase.auth()
   .signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-// export const hayAlquien = () => firebase.auth().onAuthStateChanged((user));
+export const checkUser = (callback) => {
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      callback(user);
+    }
+  });
+};
+
+// firebase.auth().signOut()

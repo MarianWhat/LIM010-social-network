@@ -46,21 +46,15 @@ export default () => {
       .then(() => {
         window.location.hash = '#/social-network';
       })
-      .catch((error) => { // Para ver si devuelve un error
-        console.log(error);
+      .catch(() => { // Para ver si devuelve un error
+        // console.log(error);
       });
   });
   btnIniciarRegistrar.addEventListener('click', (e) => {
     e.preventDefault();
     if (btnIniciarRegistrar.dataset.action === 'login') {
       autEmailPass(inputMail.value, inputPassword.value)
-        .then((resultXD) => {
-          console.log(resultXD);
-          console.log(resultXD.user);
-          console.log(resultXD.user.displayName);
-
-
-          // const usuarioAct = resultXD.user.displayName;
+        .then(() => {
           window.location.hash = '#/social-network';
         })
         .catch((error) => { // Para ver si devuelve un error
@@ -93,7 +87,7 @@ export default () => {
               msInfoAlerta.innerHTML = '**La contraseña no es válida, verifica e intente de nuevo.';
               break;
             default:
-              console.log(error);
+              // console.log(error);
               break;
           }
         });
