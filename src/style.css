@@ -427,7 +427,8 @@ width: 100%;
     width: 30px;
     margin-right: 5px;
 }
-.icon-like:hover{
+
+.icon-like.active{
     background-image: url(img/icon-like-active.png);
 }
 .post-user-cant-like{

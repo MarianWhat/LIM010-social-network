@@ -25,7 +25,6 @@ export default () => {
   sectionElem.innerHTML += viewRegistro; // Hasta que no cree este elemento
 
   const inputMail = sectionElem.querySelector('#input-mail');
-  const inputName = sectionElem.querySelector('#input-name');
   const inputPassword = sectionElem.querySelector('#input-password');
   const btnIniciarRegistrar = sectionElem.querySelector('#btn-iniciar-registrar');
   const btnMostrarClave = sectionElem.querySelector('#icon-clave');
@@ -38,13 +37,8 @@ export default () => {
     e.preventDefault();
     if (btnIniciarRegistrar.dataset.action === 'registrar') {
       crearCuentaEmailPass(inputMail.value, inputPassword.value)
-        .then((resultXD) => {
-          resultXD.user.updateProfile({ // Para actualizar
-            displayName: inputName.value,
-          });
-        })
         .then(() => {
-
+          window.location.hash = '#/social-network';
         })
         .catch((error) => { // Para ver si devuelve un error
           switch (error.code) {

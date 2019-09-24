@@ -7,12 +7,9 @@ export const crearCuentaEmailPass = (email, password) => firebase.auth()
 export const authCuentaGoogle = () => firebase.auth()
   .signInWithPopup(new firebase.auth.GoogleAuthProvider());
 
-export const checkUser = (callback) => {
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      callback(user);
-    }
-  });
-};
+// Falta testear
+export const checkUser = callback => firebase.auth()
+  .onAuthStateChanged(user => (user ? callback(user) : callback(null)));
+
 
 // firebase.auth().signOut()

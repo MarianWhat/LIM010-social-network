@@ -15,7 +15,8 @@
     "stylelint": "stylelint --aei src/**/*.css",
     "lint": "npm run eslint && npm run htmlhint && npm run stylelint",
     "test": "jest --coverage",
-    "pretest": "npm run lint"
+    "pretest": "npm run lint",
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
@@ -33,5 +34,8 @@
     "regenerator-runtime": "^0.13.1",
     "stylelint": "^10.1.0",
     "stylelint-config-recommended": "^2.2.0"
+  },
+  "dependencies": {
+    "mock-async-storage": "^2.2.0"
   }
 }

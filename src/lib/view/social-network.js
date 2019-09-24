@@ -1,5 +1,5 @@
 import {
-  createPost, uploadImgPost, checkAllPost, deletePost, updatePost,
+  createPost, uploadImgPost, checkAllPost, deletePost, updatePost, updatePostLike,
 } from '../post.js';
 import { templatePost, templateFormUpdatePost } from './template.js';
 
@@ -60,7 +60,6 @@ export default (userObj) => {
   const btnPrivacy = containerSocialNetworkViewElem.querySelector('#btn-privacy');
   const btnPublic = containerSocialNetworkViewElem.querySelector('#btn-public');
   const btnPrivate = containerSocialNetworkViewElem.querySelector('#btn-private');
-  const textPrivacy = containerSocialNetworkViewElem.querySelector('#text-privacy');
   const close = containerSocialNetworkViewElem.querySelector('#close');
   let menuStatusPrivacy = 0;
   let menuStatus = 0;
@@ -74,7 +73,6 @@ export default (userObj) => {
       </ul>      
     </nav>`;
 
-
   if (userObj) {
     photoCurrentUser.setAttribute('src', userObj.photoURL === null ? 'img/photo-default.png' : userObj.photoURL);
     nameCurrentUser.textContent = userObj.displayName;
@@ -82,13 +80,86 @@ export default (userObj) => {
   } else {
     window.location.hash = '#';
   }
-
+  const clearFormPost = () => {
+    contentToPost.value = '';
+    imgToPost.setAttribute('src', '');
+    btnRemoveImg.classList.add('none');
+    containerMorePercentage.classList.remove('none');
+    loadPercentage.textContent = 'Agrega una imagen';
+    btnUploadImg.value = '';
+  };
+  const stateChanged = (refe, btn) => {
+    const loadPercentageGeneric = btn.target.nextElementSibling.nextElementSibling.children[2];
+    const containerMorePercentageGeneric = btn.target.nextElementSibling.nextElementSibling;
+    const imgToPostGeneric = btn.target.nextElementSibling;
+    const btnRemoveImgGeneric = btn.target.previousElementSibling;
+    refe.on('state_changed',
+      (snapshot) => {
+        const porc = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+        loadPercentageGeneric.textContent = `Carga ${porc.toFixed(0)}%`;
+      },
+      // eslint-disable-next-line no-console
+      error => console.log('Error subiendo la img:', error),
+      () => {
+        refe.snapshot.ref.getDownloadURL()
+          .then((url) => {
+            imgToPostGeneric.setAttribute('src', url);
+            btnRemoveImgGeneric.classList.remove('none');
+            containerMorePercentageGeneric.classList.add('none');
+          })
+          // eslint-disable-next-line no-console
+          .catch();
+      });
+  };
+  const UploadImg = (btn) => {
+    const imgFile = btn.target.files[0];
+    const user = firebase.auth().currentUser;
+    uploadImgPost(imgFile, user.uid, stateChanged, btn);
+  };
+  const RemoveImg = (btn) => {
+    const imgToPostGeneric = btn.target.nextElementSibling.nextElementSibling;
+    const containerMorePercentageGeneric = imgToPostGeneric.nextElementSibling;
+    imgToPostGeneric.setAttribute('src', '');
+    btn.target.classList.toggle('none');
+    containerMorePercentageGeneric.classList.toggle('none');
+    containerMorePercentageGeneric.children[2].textContent = 'Agrega una imagen';
+    // Falta Z-index
+  };
+  const Privacy = (btn) => {
+    if (menuStatusPrivacy === 0) {
+      btn.nextElementSibling.classList.toggle('none');
+      menuStatusPrivacy = 1;
+    } else {
+      btn.nextElementSibling.classList.toggle('none');
+      menuStatusPrivacy = 0;
+    }
+  };
+  const Public = (btn) => {
+    const txtBtnPublic = btn.parentElement.parentElement.previousElementSibling.children[1];
+    const btnPrivacyGeneric = btn.parentElement.parentElement.previousElementSibling;
+    btnPrivacyGeneric.children[0].classList.replace('icon-private', 'icon-public');
+    btnPrivacyGeneric.setAttribute('data-privacy', 0);
+    txtBtnPublic.textContent = 'Publico';
+    btnPrivacyGeneric.nextElementSibling.classList.toggle('none');
+    menuStatusPrivacy = 0;
+  };
+  const Private = (btn) => {
+    const txtBtnPublic = btn.parentElement.parentElement.previousElementSibling.children[1];
+    const btnPrivacyGeneric = btn.parentElement.parentElement.previousElementSibling;
+    btnPrivacyGeneric.children[0].classList.replace('icon-public', 'icon-private');
+    btnPrivacyGeneric.setAttribute('data-privacy', 1);
+    txtBtnPublic.textContent = 'Solo yo';
+    btnPrivacyGeneric.nextElementSibling.classList.toggle('none');
+    menuStatusPrivacy = 0;
+  };
   const showPosts = (data) => {
     const user = firebase.auth().currentUser;
     containerPosts.innerHTML = '';
     data.forEach((post) => {
       const privacy = post.typePrivacy === '0' ? 'icon-public' : 'icon-private';
       const menuList = post.uidUser === user.uid ? templateMenuList : '';
+      const imgUrlUserN = post.imgUrlUser === null ? 'img/photo-default.png' : post.imgUrlUser;
+      const imgUrlPostN = post.imgUrlPost === null ? '' : post.imgUrlPost;
       const opcionesFecha = {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
       };
@@ -99,16 +170,24 @@ export default (userObj) => {
       const dia = soloFecha === new Date().toLocaleDateString('es-ES', opcionesFecha) ? 'Hoy' : post.publicationDate.toDate().toLocaleDateString('es-ES', opcionesFecha);
       const hora = post.publicationDate.toDate().toLocaleDateString('es-ES', soloHora);
       const date = `${dia}, ${hora}`;
+      const sumLike = (post.like).length;
+      let contLike = `<span class="icon-like btn-icon btn-like"></span>
+      <span class="post-user-cant-like">${sumLike}</span>`;
+
+      if ((post.like).includes(user.uid)) {
+        contLike = `<span class="icon-like btn-icon btn-like active"></span>
+      <span class="post-user-cant-like">${sumLike}</span>`;
+      }
 
       if (post.typePrivacy === '1' && post.uidUser === user.uid) {
         containerPosts.innerHTML += templatePost(
           post.idPost,
-          post.imgUrlUser,
+          imgUrlUserN,
           post.nameUser,
           post.content,
-          post.imgUrlPost,
+          imgUrlPostN,
           date,
-          post.totalLike,
+          contLike,
           privacy,
           menuList,
         );
@@ -116,17 +195,38 @@ export default (userObj) => {
       if (post.typePrivacy === '0') {
         containerPosts.innerHTML += templatePost(
           post.idPost,
-          post.imgUrlUser,
+          imgUrlUserN,
           post.nameUser,
           post.content,
-          post.imgUrlPost,
+          imgUrlPostN,
           date,
-          post.totalLike,
+          contLike,
           privacy,
           menuList,
         );
       }
+      const btnLikePost = containerPosts.querySelectorAll('.btn-like');
+      btnLikePost.forEach((element) => {
+        element.addEventListener('click', (e) => {
+          const idPostLike = e.target.parentElement.parentElement.parentElement.getAttribute('id');
+          firebase.firestore().collection('posts').doc(idPostLike).get()
+            .then((postLike) => {
+              const arrayLike = postLike.data().like;
+              if (!(arrayLike.includes(user.uid))) {
+                arrayLike.push(user.uid);
+                updatePostLike(idPostLike, arrayLike)
+                  .then(() => e.target.classList.add('active'));
+              } else {
+                const i = arrayLike.indexOf(user.uid);
+                arrayLike.splice(i, 1);
+                updatePostLike(idPostLike, arrayLike)
+                  .then(() => e.target.classList.remove('active'));
+              }
+            });
+        });
+      });
     });
+
     const iconMenuPuntos = containerPosts.querySelectorAll('.icon-menu-puntos');
     iconMenuPuntos.forEach((elemento) => {
       elemento.addEventListener('click', (e) => {
@@ -166,69 +266,53 @@ export default (userObj) => {
             const formUpdate = document.createElement('form');
             formUpdate.setAttribute('id', idPost);
             formUpdate.setAttribute('class', 'display-flex box-form-user');
+            console.log(post.data().imgUrlPost);
             formUpdate.innerHTML = templateFormUpdatePost(`<textarea class="input-form-user" id="content-to-post-update" placeholder="¿Tienes algo que contarnos?">${post.data().content}</textarea>`,
               post.data().imgUrlPost);
             const elementPost = e.target.parentElement.parentElement.parentElement.parentElement;
             containerPosts.replaceChild(formUpdate, elementPost);
-
+            if (post.data().imgUrlPost !== '') {
+              formUpdate.children[1].children[3].classList.toggle('none');
+              formUpdate.children[1].children[0].classList.toggle('none');
+            }
+            const btnUploadImgUpdate = formUpdate.querySelector('#btn-upload-img-update');
+            btnUploadImgUpdate.addEventListener('change', (a) => {
+              UploadImg(a);
+            });
+            const btnRemoveImgUpdate = formUpdate.querySelector('#btn-remove-img-update');
+            btnRemoveImgUpdate.addEventListener('click', (a) => {
+              RemoveImg(a);
+            });
             const btnPrivacyUpdate = formUpdate.querySelector('.btn-privacy-update');
             btnPrivacyUpdate.addEventListener('click', (a) => {
               a.preventDefault();
-              if (menuStatusPrivacy === 0) {
-                btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
-                menuStatusPrivacy = 1;
-              } else {
-                btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
-                menuStatusPrivacy = 0;
-              }
+              Privacy(btnPrivacyUpdate);
             });
             const btnPublicUpdate = formUpdate.querySelector('.btn-public-update');
             btnPublicUpdate.addEventListener('click', () => {
-              btnPrivacyUpdate.children[0].classList.replace('icon-private', 'icon-public');
-              btnPrivacyUpdate.setAttribute('data-privacy', 0);
-              btnPrivacyUpdate.children[1].textContent = 'Publico';
-              btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
-              menuStatusPrivacy = 0;
+              Public(btnPublicUpdate);
             });
             const btnPrivateUpdate = formUpdate.querySelector('.btn-private-update');
             btnPrivateUpdate.addEventListener('click', () => {
-              btnPrivacyUpdate.children[0].classList.replace('icon-public', 'icon-private');
-              btnPrivacyUpdate.setAttribute('data-privacy', 1);
-              btnPrivacyUpdate.children[1].textContent = 'Solo yo';
-              btnPrivacyUpdate.nextElementSibling.classList.toggle('none');
-              menuStatusPrivacy = 0;
+              Private(btnPrivateUpdate);
             });
+
             const contentToPostUpdate = formUpdate.querySelector('#content-to-post-update');
             const btnUpdatePostYa = formUpdate.querySelector('#btn-update-post');
+            const imgToPostUpdate = formUpdate.querySelector('#img-to-post-update');
             btnUpdatePostYa.addEventListener('click', (a) => {
               a.preventDefault();
-              const postd = firebase.firestore().collection('posts').doc(idPost);
               if (idPost !== '') {
-                updatePost(postd, contentToPostUpdate.value, btnPrivacyUpdate.getAttribute('data-privacy'));
-                // checkPublications();
+                updatePost(idPost, contentToPostUpdate.value, imgToPostUpdate.getAttribute('src'), btnPrivacyUpdate.getAttribute('data-privacy'));
               }
             });
           });
       });
     });
   };
-  const mostrarCargaImg = (info) => {
-    loadPercentage.textContent = info;
-  };
   const checkPublications = () => {
     checkAllPost(showPosts);
   };
-  const clearFormPost = () => {
-    contentToPost.value = '';
-    imgToPost.setAttribute('src', '');
-    btnRemoveImg.classList.add('none');
-    containerMorePercentage.classList.remove('none');
-    loadPercentage.textContent = 'Agrega una imagen';
-    btnUploadImg.value = '';
-  };
-  const stateChanged = () => {
-    
-  }
   // Eventos
   btnCreatePost.addEventListener('click', (e) => {
     e.preventDefault();
@@ -246,50 +330,29 @@ export default (userObj) => {
     }
   });
   btnUploadImg.addEventListener('change', (e) => {
-    const imgFile = e.target.files[0];
-    const user = firebase.auth().currentUser;
-    uploadImgPost(imgFile, user.uid, imgToPost, mostrarCargaImg,
-      btnRemoveImg, containerMorePercentage);
+    UploadImg(e);
   });
-  btnRemoveImg.addEventListener('click', () => {
-    sessionStorage.clear();
-    imgToPost.setAttribute('src', '');
-    btnRemoveImg.classList.toggle('none');
-    containerMorePercentage.classList.toggle('none');
+  btnRemoveImg.addEventListener('click', (e) => {
+    RemoveImg(e);
   });
+  btnPrivacy.addEventListener('click', (e) => {
+    e.preventDefault();
+    Privacy(btnPrivacy);
+  });
+  btnPublic.addEventListener('click', () => {
+    Public(btnPublic);
+  });
+  btnPrivate.addEventListener('click', () => {
+    Private(btnPrivate);
+  });
+  checkPublications();
+  // removeAttribute()
   close.addEventListener('click', (e) => {
     e.preventDefault();
-
     firebase.auth().signOut()
       .then(() => {
         window.location.hash = '#';
       });
   });
-  btnPrivacy.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (menuStatusPrivacy === 0) {
-      btnPrivacy.nextElementSibling.classList.toggle('none');
-      menuStatusPrivacy = 1;
-    } else {
-      btnPrivacy.nextElementSibling.classList.toggle('none');
-      menuStatusPrivacy = 0;
-    }
-  });
-  btnPublic.addEventListener('click', () => {
-    btnPrivacy.children[0].classList.replace('icon-private', 'icon-public');
-    btnPrivacy.setAttribute('data-privacy', 0);
-    textPrivacy.textContent = 'Publico';
-    btnPrivacy.nextElementSibling.classList.toggle('none');
-    menuStatusPrivacy = 0;
-  });
-  btnPrivate.addEventListener('click', () => {
-    btnPrivacy.children[0].classList.replace('icon-public', 'icon-private');
-    btnPrivacy.setAttribute('data-privacy', 1);
-    textPrivacy.textContent = 'Solo yo';
-    btnPrivacy.nextElementSibling.classList.toggle('none');
-    menuStatusPrivacy = 0;
-  });
-  checkPublications();
-  // removeAttribute().
   return containerSocialNetworkViewElem;
 };

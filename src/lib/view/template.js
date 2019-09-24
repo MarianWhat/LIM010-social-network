@@ -1,4 +1,4 @@
-export const templatePost = (idPost, imgUser, nameUser, contentPost, imgPost, datePost, totalLike, typePrivacy, menuLista) => `<article class="box-post-user" id=${idPost}>
+export const templatePost = (idPost, imgUser, nameUser, contentPost, imgPost, datePost, contLike, typePrivacy, menuLista) => `<article class="box-post-user" id=${idPost}>
   <div class="post-user-info">
     <img class="post-user-photo" src="${imgUser}">
     <div class="cont-post-user-info">
@@ -16,8 +16,8 @@ export const templatePost = (idPost, imgUser, nameUser, contentPost, imgPost, da
   </div>
   <div class="post-user-nav display-flex">
     <div class="container-like display-flex">
-        <span class="icon-like btn-icon" id=""></span>
-        <span class="post-user-cant-like">${totalLike}</span>
+        
+        ${contLike}
     </div>
     <button class="btn btn-form-user icon-text">
         <span class="btn-icon icon-comentario"></span>Comentar
@@ -27,9 +27,9 @@ export const templatePost = (idPost, imgUser, nameUser, contentPost, imgPost, da
 
 export const templateFormUpdatePost = (contentPost, urlImgPost) => `${contentPost}
 <div class="img-loading-container">
-       <span class="none remove-img btn-icon icon-img" id="btn-remove-img" title="Quitar imagen"></span>
-       <input id="btn-upload-img" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn-upload-img">
-       <img class="img-to-post" id="img-to-post" src="${urlImgPost}">
+       <span class="none remove-img btn-icon icon-img" id="btn-remove-img-update" title="Quitar imagen"></span>
+       <input id="btn-upload-img-update" type="file" name="img-post-new" accept="image/png, image/jpeg" class="btn-upload-img">
+       <img class="img-to-post" id="img-to-post-update" src="${urlImgPost}">
        <div class="container-more-percentage">
        <span class="icon-more btn-icon icon-img"></span><br>
        <span class="load-percentage">Agrega una imagen</span>
