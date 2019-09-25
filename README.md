@@ -141,36 +141,36 @@ El objetivo de usar Firestore en este proyecto, es que aprendes a manejar y pers
 
 ### HTML y CSS
 - [ ] HTML semántico
-- [ ] CSS `flexbox`
-- [ ] Maquetación
+- [x] CSS `flexbox`
+- [x] Maquetación
 
 ### DOM y Web APIs
-- [ ] Manipulación dinámica del DOM
+- [x] Manipulación dinámica del DOM
 - [ ] History API
 - [ ] `localStorage`
 
 ### Javascript
-- [ ] Uso de callbacks
-- [ ] Consumo de Promesas
-- [ ] ES modules
+- [x] Uso de callbacks
+- [x] Consumo de Promesas
+- [x] ES modules
 
 ### Firebase
-- [ ] Firestore
-- [ ] Firebase Auth
-- [ ] Firebase security rules
-- [ ] Observables
+- [x] Firestore
+- [x] Firebase Auth
+- [x] Firebase security rules
+- [x] Observables
 
 ### Testing
-- [ ] Testeo de tus funciones
-- [ ] Testeo asíncrono
-- [ ] Mocking
+- [x] Testeo de tus funciones
+- [x] Testeo asíncrono
+- [x] Mocking
 
 ### Git y Github
 - [ ] Colaboración en Github
 - [ ] Organización en Github
 
 ### Buenas prácticas de desarrollo
-- [ ] Modularización
+- [x] Modularización
 - [ ] Nomenclatura / Semántica
 - [ ] Linting
 
